@@ -5,6 +5,12 @@
  */
 package pkg01_psp_examen_junio;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author CARLOS-HC
@@ -15,7 +21,41 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        try {  
+            
+            ServerSocket ss = new ServerSocket();
+            Socket sc;
+            
+            //Creamos la banca con 1000 euros
+            Banca miBanca = new Banca(1000);
+            
+            while (true) {                
+                
+            sc = ss.accept();
+            
+            //creamos un nuevo hilo dedicado al cliente
+            new Thread(new Servidor(sc,miBanca)).start();
+                 
+                
+                
+                
+                
+                
+                
+            }
+            
+            
+            
+        } catch (IOException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+        
+        
     }
     
 }
