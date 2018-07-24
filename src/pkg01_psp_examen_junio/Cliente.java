@@ -60,10 +60,31 @@ public class Cliente {
                     
                 } while (cantidad == -1);
                 
+                sale.writeInt(cantidad);//W1
                 
+                boolean apuestaAceptada = entra.readBoolean();//R1
                 
-                
-                
+                if (apuestaAceptada) {
+                    
+                    System.out.println("Comienza el juego:");
+                    
+                    System.out.println(entra.readUTF());//R2
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                }else{
+                    
+                    System.out.println("No hay fondo suficiente para cubrir la apuesta, pruebe mas tarde.");  
+                    
+                }
                 
                 
                 
