@@ -55,7 +55,7 @@ public class Baraja {
     
         double valor;
         
-        String numero = carta.split(carta)[1];
+        String numero = carta.split("-")[1];
      
         switch (numero) {
             case "j":

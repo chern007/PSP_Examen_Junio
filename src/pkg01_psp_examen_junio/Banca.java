@@ -18,7 +18,7 @@ public class Banca {
     }
 
     //nos dira si la banca puede cubrir la apuesta del cliente
-    public boolean cubreApuesta(int cantidadApostada) {
+    public synchronized boolean cubreApuesta(int cantidadApostada) {
 
         if (fondo >= cantidadApostada) {
             return true;
@@ -27,13 +27,13 @@ public class Banca {
         }
     }
 
-    public void sumarAbanca(int cantidad) {
+    public synchronized void sumarAbanca(int cantidad) {
 
         fondo += cantidad;
 
     }
 
-    public void restarAbanca(int cantidad) {
+    public synchronized void restarAbanca(int cantidad) {
 
         fondo -= cantidad;
 

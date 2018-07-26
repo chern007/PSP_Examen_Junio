@@ -24,7 +24,7 @@ public class Main {
         
         try {  
             
-            ServerSocket ss = new ServerSocket();
+            ServerSocket ss = new ServerSocket(6060);
             Socket sc;
             
             //Creamos la banca con 1000 euros

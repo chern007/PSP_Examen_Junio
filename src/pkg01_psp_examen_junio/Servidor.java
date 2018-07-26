@@ -40,7 +40,11 @@ public class Servidor implements Runnable {
             boolean finJuego = false;
             while (!finJuego) {
 
-                if (miBanca.cubreApuesta(entra.readInt())) {//R1
+                int cantidadApostada = entra.readInt();//R1
+
+                if (miBanca.cubreApuesta(cantidadApostada)) {
+
+                    miBanca.restarAbanca(cantidadApostada);//le restamos el dinero a la banca para reservarlo
 
                     sale.writeBoolean(true);//W1 le mandamos el ok
 
@@ -63,24 +67,56 @@ public class Servidor implements Runnable {
                             //le preguntamos si quiere seguir sacando cartas
                             sale.writeUTF("¿Quieres sacar otra carta?");//W3    
 
-                            paraSacarCartas = !entra.readBoolean();//R2
+                            paraSacarCartas = entra.readBoolean();//R2
 
-                        }else{
+                        } else {
+                            sale.writeUTF("Te has pasado de 7.5. Has PERDIDO " + cantidadApostada + " euros.");//W3 
                             seHaPasado = true;
                         }
 
                     } while (!paraSacarCartas && !seHaPasado);
 
+                    //comienza el turno de la maquina
+                    if (!seHaPasado) {
+
+                        double puntuacionPartidaMAQUINA = 0;
+                        boolean seHaPasadoMAQUINA = false;
+                        boolean haGanadoMaquina = false;
+                        String cartaMAQUINA;
+
+                        while (!seHaPasadoMAQUINA && !haGanadoMaquina) {
+
+                            cartaMAQUINA = miBaraja.sacarCarta();
+                            sale.writeUTF("La MAQUINA ha sacado la carta " + cartaMAQUINA.split("-")[1].toUpperCase() + " de " + cartaMAQUINA.split("-")[0].toUpperCase());//W4
+                            puntuacionPartidaMAQUINA += miBaraja.sacarValorCarta(cartaMAQUINA);
+
+                            if (puntuacionPartidaMAQUINA > 7.5) {
+
+                                seHaPasadoMAQUINA = true;
+                                //le mandamos al usuario que ha perdido la maquina
+                                sale.writeUTF("La maquina se ha pasado. ¡Has GANADO " + cantidadApostada + " euros!");//W4
+
+                            } else if (puntuacionPartidaMAQUINA >= puntuacionPartida) {
+                                haGanadoMaquina = true;
+                                sale.writeUTF("La maquina ha sacado mas puntuacion que tu ¡Has PERDIDO " + cantidadApostada + " euros!");//W4
+                                miBanca.restarAbanca(cantidadApostada * 2);
+                            }
+
+                        }
+
+                    }
+
                 } else {
 
-                    sale.writeBoolean(false);//W1 le mandamos el cancel
+                    sale.writeBoolean(false);//W1 le decimos que no puede cubrir su apuesta
                     finJuego = true;
                 }
 
+                sale.writeUTF("¿Quieres seguir jugando y echar otra partida?");//W&
+                finJuego = entra.readBoolean();//si elige si el juego terminará
                 //quiere seguir apostando???//W
                 //si/no R --> fin juego
-                
-                
+
             }//primer while
 
         } catch (IOException ex) {
