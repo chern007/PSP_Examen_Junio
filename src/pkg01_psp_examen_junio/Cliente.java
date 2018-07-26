@@ -49,7 +49,7 @@ public class Cliente {
                     System.out.println("¿Cuanto quieres apostar?");
                     //por si mete otra cosa que no sea un numero
                     try {
-                        cantidad = entrada.nextInt();
+                        cantidad = entrada.nextInt();entrada.nextLine();
                     } catch (Exception e) {
                     }
 
