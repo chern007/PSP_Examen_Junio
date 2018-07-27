@@ -70,7 +70,9 @@ public class Servidor implements Runnable {
                             paraSacarCartas = entra.readBoolean();//R2
 
                         } else {
-                            sale.writeUTF("Te has pasado de 7.5. Has PERDIDO " + cantidadApostada + " euros.");//W3 
+                            sale.writeUTF("Te has pasado de 7.5. Has PERDIDO " + cantidadApostada + " euros.");//W3
+                            miBanca.sumarAbanca(cantidadApostada * 2);
+                            System.out.println("La banca dipone de un fondo de : " + miBanca.dameFondo() + " euros");
                             seHaPasado = true;
                         }
 
@@ -95,11 +97,13 @@ public class Servidor implements Runnable {
                                 seHaPasadoMAQUINA = true;
                                 //le mandamos al usuario que ha perdido la maquina
                                 sale.writeUTF("La maquina se ha pasado. ¡Has GANADO " + cantidadApostada + " euros!");//W4
+                                System.out.println("La banca dipone de un fondo de : " + miBanca.dameFondo() + " euros");
 
                             } else if (puntuacionPartidaMAQUINA >= puntuacionPartida) {
                                 haGanadoMaquina = true;
                                 sale.writeUTF("La maquina ha sacado mas puntuacion que tu ¡Has PERDIDO " + cantidadApostada + " euros!");//W4
-                                miBanca.restarAbanca(cantidadApostada * 2);
+                                miBanca.sumarAbanca(cantidadApostada * 2);
+                                System.out.println("La banca dipone de un fondo de : " + miBanca.dameFondo() + " euros");
                             }
 
                         }
@@ -112,12 +116,15 @@ public class Servidor implements Runnable {
                     finJuego = true;
                 }
 
-                sale.writeUTF("¿Quieres seguir jugando y echar otra partida?");//W&
+                sale.writeUTF("¿Quieres seguir jugando y echar otra partida?");//W6
                 finJuego = entra.readBoolean();//si elige si el juego terminará
-                //quiere seguir apostando???//W
-                //si/no R --> fin juego
 
-            }//primer while
+            }//primer while            
+
+            //cerramos las comunicaciones
+            entra.close();
+            sale.close();
+            sc.close();
 
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);

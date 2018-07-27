@@ -39,4 +39,10 @@ public class Banca {
 
     }
 
+    public synchronized int dameFondo() {
+
+        return this.fondo;
+
+    }
+
 }

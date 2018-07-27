@@ -49,7 +49,8 @@ public class Cliente {
                     System.out.println("¿Cuanto quieres apostar?");
                     //por si mete otra cosa que no sea un numero
                     try {
-                        cantidad = entrada.nextInt();entrada.nextLine();
+                        cantidad = entrada.nextInt();
+                        entrada.nextLine();
                     } catch (Exception e) {
                     }
 
@@ -71,10 +72,10 @@ public class Cliente {
                         System.out.println(entra.readUTF());//R2 has sacado la carta ...
 
                         auxRespuestas = entra.readUTF();
+                        String pregunta = auxRespuestas;
                         if (auxRespuestas.contains("otra carta")) {//R3                            QUIERES SACAR OTRA CARTA o  TE HAS PASADO
 
-                                String pregunta = auxRespuestas;
-                            do {                                
+                            do {
                                 System.out.println(pregunta);
 
                                 auxRespuestas = entrada.nextLine();
@@ -88,6 +89,7 @@ public class Cliente {
 
                             } else {
                                 sale.writeBoolean(true);//W2
+                                finJugadorSacarCartas= true;
                             }
 
                         } else {
@@ -98,8 +100,9 @@ public class Cliente {
                         }
 
                     }//while saca cartas jugador
-
-                    if (!teHasPasado) {
+                    
+                    
+                    if (!teHasPasado) {                        
 
                         boolean finSacaCarta = false;
                         String SIGUIENTEoGANADOoPERDIDO = "";
@@ -115,9 +118,10 @@ public class Cliente {
 
                     }
 
+                    
                     auxRespuestas = entra.readUTF();//W6      quieres seguir jugando??
                     String pregunta = auxRespuestas;
-                    do {     
+                    do {
                         System.out.println(pregunta);
 
                         auxRespuestas = entrada.nextLine();
@@ -131,6 +135,7 @@ public class Cliente {
                     } else {
 
                         sale.writeBoolean(true);//terminamos de jugar
+                        finalJuego = true;
                     }
 
                 } else {
@@ -140,6 +145,11 @@ public class Cliente {
                 }
 
             }
+            
+            //cerramos las comunicaciones
+            entra.close();
+            sale.close();
+            sc.close();
 
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
