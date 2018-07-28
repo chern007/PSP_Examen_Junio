@@ -113,7 +113,7 @@ public class Servidor implements Runnable {
                 } else {
 
                     sale.writeBoolean(false);//W1 le decimos que no puede cubrir su apuesta
-                    finJuego = true;
+                    //finJuego = true;
                 }
 
                 sale.writeUTF("¿Quieres seguir jugando y echar otra partida?");//W6

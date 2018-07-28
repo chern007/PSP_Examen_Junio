@@ -89,7 +89,7 @@ public class Cliente {
 
                             } else {
                                 sale.writeBoolean(true);//W2
-                                finJugadorSacarCartas= true;
+                                finJugadorSacarCartas = true;
                             }
 
                         } else {
@@ -100,9 +100,8 @@ public class Cliente {
                         }
 
                     }//while saca cartas jugador
-                    
-                    
-                    if (!teHasPasado) {                        
+
+                    if (!teHasPasado) {
 
                         boolean finSacaCarta = false;
                         String SIGUIENTEoGANADOoPERDIDO = "";
@@ -118,34 +117,34 @@ public class Cliente {
 
                     }
 
-                    
-                    auxRespuestas = entra.readUTF();//W6      quieres seguir jugando??
-                    String pregunta = auxRespuestas;
-                    do {
-                        System.out.println(pregunta);
-
-                        auxRespuestas = entrada.nextLine();
-
-                    } while (!auxRespuestas.toLowerCase().equals("si") && !auxRespuestas.toLowerCase().equals("no"));
-
-                    if (auxRespuestas.equals("si")) {
-
-                        sale.writeBoolean(false);//seguimos jugando
-
-                    } else {
-
-                        sale.writeBoolean(true);//terminamos de jugar
-                        finalJuego = true;
-                    }
-
                 } else {
 
                     System.out.println("No hay fondo suficiente para cubrir la apuesta, pruebe mas tarde.");
 
                 }
 
+                //SEGUIMOS CON EL JUEGO
+                String auxRespuestas = entra.readUTF();//W6      quieres seguir jugando??
+                String pregunta = auxRespuestas;
+                do {
+                    System.out.println(pregunta);
+
+                    auxRespuestas = entrada.nextLine();
+
+                } while (!auxRespuestas.toLowerCase().equals("si") && !auxRespuestas.toLowerCase().equals("no"));
+
+                if (auxRespuestas.equals("si")) {
+
+                    sale.writeBoolean(false);//seguimos jugando
+
+                } else {
+
+                    sale.writeBoolean(true);//terminamos de jugar
+                    finalJuego = true;
+                }
+
             }
-            
+
             //cerramos las comunicaciones
             entra.close();
             sale.close();
