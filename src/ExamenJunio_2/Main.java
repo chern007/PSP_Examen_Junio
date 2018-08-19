@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pkg01_psp_examen_junio;
+package ExamenJunio_2;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,28 +16,30 @@ import java.util.logging.Logger;
  * @author CARLOS-HC
  */
 public class Main {
-
-    /**
-     * @param args the command line arguments
-     */
+    
+    
     public static void main(String[] args) {
         
-        try {  
+        try {
             
             ServerSocket ss = new ServerSocket(6060);
             Socket sc;
             
-            //Creamos la banca con 1000 euros
-            Banca miBanca = new Banca(1000);
+            Banca miBanca = new Banca();//creamos la banca que pasaremos a todos los clientes que se conecten
             
             while (true) {                
+               
+               sc = ss.accept();
                 
-            sc = ss.accept();
-            
-            //creamos un nuevo hilo dedicado al cliente
-            new Thread(new Servidor(sc,miBanca)).start();
+               new Thread(new Servidor(miBanca, sc)).start();    
+                
                 
             }
+            
+            
+            
+            
+            
             
             
             
@@ -50,6 +52,10 @@ public class Main {
         
         
         
+        
+        
     }
+    
+    
     
 }
