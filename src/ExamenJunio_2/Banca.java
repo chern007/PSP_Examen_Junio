@@ -18,7 +18,7 @@ public class Banca {
         this.saldo = 1000;
     }
 
-    public int getSaldo() {
+    public synchronized int getSaldo() {
         return saldo;
     }
     

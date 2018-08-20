@@ -44,6 +44,8 @@ public class Servidor implements Runnable {
             int importeApuesta = entra.readInt();//R1.5
             
             if(importeApuesta <= miBanca.getSaldo()){
+                
+            sale.writeBoolean(true);//W1.75
 
             boolean finJuego = false;
             while (!finJuego) {
@@ -108,6 +110,8 @@ public class Servidor implements Runnable {
 
             }//FIN DEL JUEGO
             
+            }else{
+                sale.writeBoolean(false);//W1.75
             }
 
             entra.close();
