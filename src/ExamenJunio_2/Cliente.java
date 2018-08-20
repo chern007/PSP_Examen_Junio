@@ -71,17 +71,40 @@ public class Cliente {
 
                         //imprimimos la carta que has sacado
                         System.out.println(entra.readUTF());
-                        
+
                         //o has perdido o continuas?
                         String perdidoContinuas = entra.readUTF();
                         System.out.println(perdidoContinuas);
-                        
+
                         if (perdidoContinuas.contains("PERDIDO")) {
-                            seHaPasadoCliente= true;
+                            seHaPasadoCliente = true;
+                        } else {
+
+                            String continua = "";
+                            do {
+                                System.out.println(perdidoContinuas);
+                                continua = entrada.nextLine().toUpperCase();
+
+                            } while (!continua.equals("SI") && !continua.equals("NO"));
+
+                            if (continua.equals("SI")) {
+                                sale.writeBoolean(false);
+                            } else {
+                                sale.writeBoolean(true);
+                            }
+
                         }
-                        
+
+                    }
+                    
+                    while (finSacaCartasCliente) {                        
                         
                     }
+                    
+                    
+                    
+                    
+                    
 
                 } else {
 
