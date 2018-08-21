@@ -41,25 +41,28 @@ public class Cliente {
             //recogemos el saludo del servidor
             System.out.println(entra.readUTF());
 
-            //recogemos la pregunta de cuanto apostar
-            String preguntaCantidad = entra.readUTF();
-
-            //recogemos la cantidad que queremos apostar
-            int cantidad = -1;
-            do {
-
-                System.out.println(preguntaCantidad);
-
-                cantidad = entrada.nextInt();
-                entrada.nextLine();
-
-            } while (!(cantidad > 0));
-
-            //mandamos la cantidad
-            sale.writeInt(cantidad);
-
             boolean finJuego = false;
             while (!finJuego) {
+
+                //recogemos la pregunta de cuanto apostar
+                String preguntaCantidad = entra.readUTF();
+
+                //recogemos la cantidad que queremos apostar
+                int cantidad = -1;
+                do {
+                    System.out.println(preguntaCantidad);
+
+                    try {
+                        cantidad = entrada.nextInt();
+                    } catch (Exception e) {
+                    };
+
+                    entrada.nextLine();
+
+                } while (!(cantidad > 0));
+
+                //mandamos la cantidad
+                sale.writeInt(cantidad);
 
                 //leemos si la apuesta es mayor o menor al dinero disponible en la banca
                 if (entra.readBoolean()) {
@@ -74,9 +77,9 @@ public class Cliente {
 
                         //o has perdido o continuas?
                         String perdidoContinuas = entra.readUTF();
-                        System.out.println(perdidoContinuas);
 
                         if (perdidoContinuas.contains("PERDIDO")) {
+                            System.out.println(perdidoContinuas);
                             seHaPasadoCliente = true;
                         } else {
 
@@ -91,27 +94,55 @@ public class Cliente {
                                 sale.writeBoolean(false);
                             } else {
                                 sale.writeBoolean(true);
+                                finSacaCartasCliente = true;
                             }
 
                         }
 
                     }
-                    
-                    while (finSacaCartasCliente) {                        
-                        
+
+                    if (!seHaPasadoCliente) {
+
+                        //bucle saca cartas maquina
+                        boolean finSacaCartasMaquina = false;
+                        while (!finSacaCartasMaquina) {
+
+                            String resultadoMaquina = entra.readUTF();
+                            System.out.println(resultadoMaquina);
+
+                            if (resultadoMaquina.contains("GANADO") || resultadoMaquina.contains("PERDIDO")) {
+
+                                finSacaCartasMaquina = true;
+                            }
+
+                        }
                     }
-                    
-                    
-                    
-                    
-                    
+
+                    //quieres echar otra partida?
+                    String otraPartida = entra.readUTF();
+
+                    String respuesta;
+                    do {
+                        System.out.println(otraPartida);
+
+                        respuesta = entrada.nextLine().toUpperCase();
+
+                    } while (!respuesta.equals("SI") && !respuesta.equals("NO"));
+
+                    //mandamos la respuesta
+                    sale.writeUTF(respuesta);
+
+                    //finalizamos el juego
+                    if (respuesta.equals("NO")) {
+                        finJuego = true;
+                    }
 
                 } else {
 
-                    System.out.println("No hay dinero suficiente para cubrir la apuesta, prueb mas tarde.");
+                    System.out.println("No hay dinero suficiente para cubrir la apuesta, prueba mas tarde.");
                 }
 
-            }
+            }//while finJuego
         } catch (IOException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }

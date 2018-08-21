@@ -38,81 +38,85 @@ public class Servidor implements Runnable {
 
             String nombreCliente = entra.readUTF();//R1
 
-            sale.writeUTF("Hola " + nombreCliente + " vamos a jugar al 7 y medio!");//W1
-
-            sale.writeUTF("Cuanto dinero quieres apostar?");//W1.5
-            int importeApuesta = entra.readInt();//R1.5
-            
-            if(importeApuesta <= miBanca.getSaldo()){
-                
-            sale.writeBoolean(true);//W1.75
+            sale.writeUTF("Hola " + nombreCliente + " vamos a jugar al 7 y medio!");//W1            
 
             boolean finJuego = false;
             while (!finJuego) {
 
-                boolean seHaPasadoCliente = false;
-                double puntuacionCliente = 0;
-                boolean finSacaCartasCliente = false;
-                while (!finSacaCartasCliente) {
+                sale.writeUTF("Cuanto dinero quieres apostar?");//W1.5
+                int importeApuesta = entra.readInt();//R1.5   
 
-                    String cartaSacada = miBaraja.sacaCarta();
+                if (importeApuesta <= miBanca.getSaldo()) {
+                    
+                    miBanca.reservarApuesta(importeApuesta);//reservamos el importe de la apuesta
+                    
+                    sale.writeBoolean(true);//W1.75
 
-                    puntuacionCliente += miBaraja.valorCarta(cartaSacada);
-
-                    sale.writeUTF("Has sacado la carta " + cartaSacada.split("_")[0] + " de " + cartaSacada.split("_")[1] + ".");//W2
-
-                    if (puntuacionCliente > 7.5) {
-
-                        sale.writeUTF("Has PERDIDO, te has pasado de 7.5");//W3
-                        seHaPasadoCliente = true;
-                        finSacaCartasCliente = true;
-                        miBanca.ingresarAbanca(importeApuesta * 2);
-                    } else {
-                        sale.writeUTF("Quieres sacar otra carta?");//W3
-                        finSacaCartasCliente = entra.readBoolean();//R2
-                    }
-
-                }
-
-                if (!seHaPasadoCliente) {
-
-                    boolean seHaPasadoMaquina = false;
-                    double puntuacionMaquina = 0;
-                    boolean finSacaCartasMaquina = false;
-                    while (!finSacaCartasCliente && !seHaPasadoMaquina) {
+                    boolean seHaPasadoCliente = false;
+                    double puntuacionCliente = 0;
+                    boolean finSacaCartasCliente = false;
+                    while (!finSacaCartasCliente) {
 
                         String cartaSacada = miBaraja.sacaCarta();
 
-                        sale.writeUTF("La máquina ha sacado la carta " + cartaSacada.split("_")[0] + " de " + cartaSacada.split("_")[1] + ".");//W4
+                        puntuacionCliente += miBaraja.valorCarta(cartaSacada);
 
-                        puntuacionMaquina += miBaraja.valorCarta(cartaSacada);
+                        sale.writeUTF("Has sacado la carta " + cartaSacada.split("_")[0] + " de " + cartaSacada.split("_")[1] + ".");//W2
 
-                        if (puntuacionMaquina > 7.5) {
-                            seHaPasadoMaquina = true;
-                            sale.writeUTF("Has GANADO, la máquina se ha pasado de 7.5 (" + importeApuesta + " euros)");//W4
-                        } else if (puntuacionMaquina >= puntuacionCliente) {
-                            finSacaCartasMaquina = true;
-                            sale.writeUTF("Has PERDIDO la máquina ha sacado una puntuación de " + puntuacionMaquina + " y tu puntuación ha sido " + puntuacionCliente);//W4
+                        if (puntuacionCliente > 7.5) {
+
+                            sale.writeUTF("Has PERDIDO, te has pasado de 7.5");//W3
+                            seHaPasadoCliente = true;
+                            finSacaCartasCliente = true;
                             miBanca.ingresarAbanca(importeApuesta * 2);
+                        } else {
+                            sale.writeUTF("Quieres sacar otra carta?");//W3
+                            finSacaCartasCliente = entra.readBoolean();//R2
                         }
 
                     }
 
-                }
+                    if (!seHaPasadoCliente) {
 
-                //preguntamos si quiere seguir jugando
-                sale.writeUTF("Quieres echar otra partida?");//W5
-                String otraPartida = entra.readUTF();//R3
+                        boolean seHaPasadoMaquina = false;
+                        double puntuacionMaquina = 0;
+                        boolean finSacaCartasMaquina = false;
+                        while (!finSacaCartasMaquina && !seHaPasadoMaquina) {
 
-                if (otraPartida.equals("no")) {
-                    finJuego = true;
+                            String cartaSacada = miBaraja.sacaCarta();
+
+                            sale.writeUTF("La máquina ha sacado la carta " + cartaSacada.split("_")[0] + " de " + cartaSacada.split("_")[1] + ".");//W4
+
+                            puntuacionMaquina += miBaraja.valorCarta(cartaSacada);
+
+                            if (puntuacionMaquina > 7.5) {
+                                seHaPasadoMaquina = true;
+                                sale.writeUTF("Has GANADO, la máquina se ha pasado de 7.5 (" + importeApuesta + " euros)");//W4
+                            } else if (puntuacionMaquina >= puntuacionCliente) {
+                                finSacaCartasMaquina = true;
+                                sale.writeUTF("Has PERDIDO la máquina ha sacado una puntuación de " + puntuacionMaquina + " y tu puntuación ha sido " + puntuacionCliente);//W4
+                                miBanca.ingresarAbanca(importeApuesta * 2);
+                            }
+
+                        }
+
+                    }
+
+                    
+                    System.out.println("ESTADO DE LA BANCA: " + miBanca.getSaldo() + "euros");
+                    //preguntamos si quiere seguir jugando
+                    sale.writeUTF("Quieres echar otra partida?");//W5
+                    String otraPartida = entra.readUTF();//R3
+
+                    if (otraPartida.equals("NO")) {
+                        finJuego = true;
+                    }
+
+                } else {
+                    sale.writeBoolean(false);//W1.75
                 }
 
             }//FIN DEL JUEGO
-            
-            }else{
-                sale.writeBoolean(false);//W1.75
-            }
 
             entra.close();
             sale.close();
