@@ -5,10 +5,13 @@
  */
 package ejercicios;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +38,9 @@ import javax.crypto.SecretKey;
 public class ejercicios {
 
     public static void main(String[] args) {
+        
+        
+        bufferedReader();
         
         //sacamos un numero aleatorio entre dos extremos 50 y 100
         
@@ -85,6 +91,11 @@ public class ejercicios {
                 System.out.print((char) b);
             }
 
+            
+            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            
             //EJEMPLO DE CIFRADO DE UN ARCHIVO DE TEXTO
             //creamos el generador de claves
             KeyGenerator kg = KeyGenerator.getInstance("AES");
@@ -143,7 +154,43 @@ public class ejercicios {
         }
 
     }
-
+    
+    
+    private static void bufferedReader(){
+        
+        try {
+            
+            BufferedReader br = new BufferedReader(new FileReader("C:\\Users\\chern007\\Desktop\\tarea06.txt"));
+            
+            String lectura;
+            
+            while ((lectura = br.readLine())!= null) {                
+                
+                System.out.println(lectura);
+                
+            }
+            
+            
+            
+            
+            
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ejercicios.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ejercicios.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+        
+        
+        
+        
+    }
+    
+    
+    
 }
 
 class BarajaEspañola {
@@ -161,18 +208,7 @@ class BarajaEspañola {
 
     }
 
-    public String sacaUnaCarta(){
-        
-        
-        
-        
-        
-        
-        
-        
-        return "";
-        
-    }
+
     
     
 }
